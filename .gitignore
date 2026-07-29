@@ -5,6 +5,11 @@
 *.tfstate
 *.tfstate.*
 
+# Scan reports folder containing findings and secrets
+reports/
+reports/*
+
+
 # Crash log files
 crash.log
 crash.*.log
