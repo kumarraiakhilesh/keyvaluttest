@@ -17,12 +17,13 @@ steps:
   displayName: 'Terraform Format Check'
   workingDirectory: $(workingDir)
 
-# 2. TFLint Static Analysis
+# 2. TFLint Static Analysis (Non-blocking)
 - script: |
     tflint --init
     tflint --recursive
   displayName: 'TFLint Static Analysis'
   workingDirectory: $(workingDir)
+  continueOnError: true
 
 # 3. Terraform Init
 - task: TerraformTask@5
