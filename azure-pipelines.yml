@@ -1,5 +1,6 @@
 trigger:
 - main
+- dev
 
 pool:
   name: 25july
@@ -11,20 +12,19 @@ steps:
 - script: echo "Starting Terraform Pipeline..."
   displayName: 'Initialize Pipeline'
 
-# 1. Terraform Format Check
+# 1. Terraform Format Check (fmt)
 - script: |
     terraform fmt -check -recursive
   displayName: 'Terraform Format Check'
   workingDirectory: $(workingDir)
 
-# 2. TFLint Static Analysis
+# 2. TFLint Static Analysis (Non-blocking)
 - script: |
     tflint --init
     tflint --recursive
   displayName: 'TFLint Static Analysis'
   workingDirectory: $(workingDir)
   continueOnError: true
-
 
 # 3. Terraform Init
 - task: TerraformTask@5
@@ -55,3 +55,4 @@ steps:
     command: 'plan'
     workingDirectory: $(workingDir)
     environmentServiceNameAzureRM: 'akhilesh25'
+
