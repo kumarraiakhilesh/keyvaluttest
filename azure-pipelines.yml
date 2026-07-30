@@ -1,0 +1,55 @@
+trigger:
+- main
+
+pool:
+  name: 25july
+
+variables:
+  workingDir: '$(System.DefaultWorkingDirectory)/Env/Dev'
+
+steps:
+- script: echo "Starting Terraform Pipeline..."
+  displayName: 'Initialize Pipeline'
+
+# 1. Terraform Format Check (fmt)
+- script: |
+    terraform fmt -check -recursive
+  displayName: 'Terraform Format Check'
+  workingDirectory: $(workingDir)
+
+# 2. TFLint Static Analysis
+- script: |
+    tflint --init
+    tflint --recursive
+  displayName: 'TFLint Static Analysis'
+  workingDirectory: $(workingDir)
+
+# 3. Terraform Init
+- task: TerraformTask@5
+  displayName: 'Terraform Init'
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: $(workingDir)
+    backendServiceArm: 'akhilesh25'
+    backendAzureRmResourceGroupName: 'akhileshtestpip'
+    backendAzureRmStorageAccountName: 'akhileshstoragepipi2'
+    backendAzureRmContainerName: 'akhileshcanttest'
+    backendAzureRmKey: 'pipe.tfstate'
+
+# 4. Terraform Validate
+- task: TerraformTask@5
+  displayName: 'Terraform Validate'
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: $(workingDir)
+
+# 5. Terraform Plan
+- task: TerraformTask@5
+  displayName: 'Terraform Plan'
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    workingDirectory: $(workingDir)
+    environmentServiceNameAzureRM: 'akhilesh25'
