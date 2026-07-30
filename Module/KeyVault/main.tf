@@ -19,7 +19,7 @@ resource "azurerm_key_vault" "kv" {
     ])
 
     secret_permissions = try(each.value.secret_permissions, [
-      "Get", "List", "Set", "Delete", "Purge", "Recover"
+      "Get", "List", "Set", "Delete", "Purge", "Recover"  
     ])
   }
 }
